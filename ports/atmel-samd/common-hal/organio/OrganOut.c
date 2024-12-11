@@ -199,20 +199,52 @@ static void pulse_finish(void) {
     }
 }
 
+
+/*
+
+Sista (?) idéerna:
+- [GJORT] lägg "re-trig" av timern först i ISR
+- [GJORT] lägg in en räknare som inkrementeras direkt i ISR, och dekrementeras sist, samt lägg i början till
+  en koll på att den är 0 vid ingången, logga annars (en logg), eller tänd LED
+
+- OBS: Tänd LED istället för att logga vid wrap!
+
+- lägg in dynamisk CC, antingen i runtime (så att den börjar med stor CC och sen minskar tills ovan
+  nämnda check slår in), eller att CC skickas in i konstruktorn, så att jag får minska efter hand i repl.
+
+*/
+
+static int _still_processing_tones = false;
+
 void organout_interrupt_handler(uint8_t index) {
     if (index != pulseout_tc_index) {
         return;
     }
+
     Tc *tc = tc_insts[index];
+
     if (!tc->COUNT16.INTFLAG.bit.MC0) {
         return;
     }
 
+    // Reset the interrupt bit before doing stuff, to make the update frequency steadier. Naturally,
+    // that introduces a risk that a new interrupt could arrive before the previous one was done.
+
+    // Clear the interrupt bit
+    tc->COUNT16.INTFLAG.reg = TC_INTFLAG_MC0;
+
+    // Bail out if we came here before the last call was finished
+    if (_still_processing_tones) {
+        printf("WARNING: Interrupt handler wrapped.\n");
+        _still_processing_tones = false;
+        return;
+    }
+    _still_processing_tones = true;
+
+    // Do stuff
     pulse_finish();
 
-    // TODO: See if moving this to the top makes a difference (could theorethically make the timing better)
-    // Clear the interrupt bit.
-    tc->COUNT16.INTFLAG.reg = TC_INTFLAG_MC0;
+    _still_processing_tones = false;
 }
 
 // TODO: As it looks now, pin/freq/DC will not be set in this init, but in an add() – remove when the dust settles
