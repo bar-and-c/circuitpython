@@ -318,6 +318,9 @@ endif
 ifeq ($(CIRCUITPY_PULSEIO),1)
 SRC_PATTERNS += pulseio/%
 endif
+ifeq ($(CIRCUITPY_ORGANIO),1)
+SRC_PATTERNS += organio/%
+endif
 ifeq ($(CIRCUITPY_PWMIO),1)
 SRC_PATTERNS += pwmio/%
 endif
@@ -511,6 +514,8 @@ SRC_COMMON_HAL_ALL = \
 	nvm/ByteArray.c \
 	nvm/__init__.c \
 	os/__init__.c \
+	organio/OrganOut.c \
+	organio/__init__.c \
 	paralleldisplaybus/ParallelBus.c \
 	ps2io/Ps2.c \
 	ps2io/__init__.c \

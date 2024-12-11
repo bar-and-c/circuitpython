@@ -62,6 +62,7 @@ as a natural "TODO" list. An example minimal build list is shown below:
     CIRCUITPY_COUNTIO = 0
     CIRCUITPY_NEOPIXEL_WRITE = 0
     CIRCUITPY_PULSEIO = 0
+    CIRCUITPY_ORGANIO = 0
     CIRCUITPY_OS = 0
     CIRCUITPY_NVM = 0
     CIRCUITPY_AUDIOBUSIO = 0

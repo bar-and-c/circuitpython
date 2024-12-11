@@ -1,0 +1,137 @@
+The fastest time between timer ticks I could get was 0,001342778 s.
+
+
+>>> o = organio.OrganOut(pin=pin, frequency=1, duty_cycle=0)
+OrganOut init: period_us=1000000, current_compare=2
+div 1, current_compare=2
+>>> o.start()
+OrganOut start: tc-reg=2, current_compare=2
+>>> last: 1342778, second last: 1342765
+last: 1464837, second last: 1342778
+last: 1342765, second last: 1342778
+last: 1342765, second last: 1464850
+last: 1342765, second last: 1342778
+last: 1342765, second last: 1342778
+last: 1342765, second last: 1342778
+last: 1342765, second last: 1342778
+last: 1464837, second last: 1342778
+last: 1342779, second last: 1342778
+last: 1342779, second last: 1464850
+last: 1342779, second last: 1342778
+last: 1342779, second last: 1342778
+last: 1464851, second last: 1342765
+last: 1342779, second last: 1342765
+last: 1342779, second last: 1342765
+last: 1464851, second last: 1342765
+last: 1342779, second last: 1342765
+last: 1342779, second last: 1464837
+last: 1342779, second last: 1342765
+last: 1342779, second last: 1464837
+last: 1342765, second last: 1342779
+last: 1342765, second last: 1342779
+last: 1464837, second last: 1342779
+
+
+o.stop()
+
+
+
+
+>>> o = organio.OrganOut(pin=pin, frequency=1, duty_cycle=1)
+OrganOut init: period_us=1000000, current_compare=1
+div 1, current_compare=1
+>>> o.start()
+OrganOut start: tc-reg=1, current_compare=1
+>>> last: 1342778, second last: 1342765
+last: 1342778, second last: 1464837
+last: 1342765, second last: 1342778
+last: 1342765, second last: 1464850
+last: 1342765, second last: 1342778
+last: 1342765, second last: 1464850
+last: 1342765, second last: 1342778
+last: 1342765, second last: 1464850
+last: 1342779, second last: 1342778
+last: 1342779, second last: 1342778
+last: 1464851, second last: 1342778
+last: 1342779, second last: 1342778
+last: 1342779, second last: 1464837
+last: 1342779, second last: 1342765
+last: 1342779, second last: 1342765
+last: 1464851, second last: 1342765
+last: 1342779, second last: 1342765
+last: 1464851, second last: 1342765
+last: 1342779, second last: 1342765
+last: 1464837, second last: 1342779
+last: 1342765, second last: 1342779
+last: 1342765, second last: 1464851
+last: 1342765, second last: 1342779
+last: 1342765, second last: 1464851
+last: 1342765, second last: 1342779
+last: 1342765, second last: 1342779
+o.stop()
+
+
+>>> o = organio.OrganOut(pin=pin, frequency=1, duty_cycle=2)
+OrganOut init: period_us=1000000, current_compare=1
+div 2, current_compare=1
+>>> o.start()
+OrganOut start: tc-reg=1, current_compare=1
+>>> last: 2685557, second last: 2807616
+last: 2807616, second last: 2685557
+last: 2807616, second last: 2685557
+last: 2685544, second last: 2807615
+last: 2807616, second last: 2685543
+last: 2807616, second last: 2685543
+last: 2807616, second last: 2685543
+last: 2807616, second last: 2685543
+last: 2807629, second last: 2685543
+last: 2807615, second last: 2685557
+last: 2685543, second last: 2807616
+last: 2685543, second last: 2807616
+last: 2807615, second last: 2685544
+last: 2807615, second last: 2685544
+last: 2807615, second last: 2685544
+last: 2685557, second last: 2685544
+last: 2685544, second last: 2807629
+last: 2685544, second last: 2807615
+last: 2807616, second last: 2685543
+last: 2807616, second last: 2685543
+o.stop()
+
+
+Even 50 in current_compare gives about the same:
+>>> o = organio.OrganOut(pin=pin, frequency=1, duty_cycle=0)
+OrganOut init: period_us=1000000, current_compare=50
+div 1, current_compare=50
+>>> o.start()
+OrganOut start: tc-reg=50, current_compare=50
+>>> last: 1342779, second last: 1342765
+last: 1342779, second last: 1464837
+last: 1342779, second last: 1342765
+last: 1342779, second last: 1464837
+last: 1342779, second last: 1342765
+last: 1464837, second last: 1342779
+last: 1342765, second last: 1342779
+last: 1464837, second last: 1342779
+last: 1342765, second last: 1342779
+last: 1464837, second last: 1342779
+last: 1342765, second last: 1342779
+last: 1342778, second last: 1342779
+last: 1342778, second last: 1342779
+last: 1464850, second last: 1342779
+last: 1342778, second last: 1464837
+last: 1342778, second last: 1342765
+last: 1342778, second last: 1464837
+last: 1342778, second last: 1342765
+last: 1464850, second last: 1342765
+o.stop()last: 1342778, second last: 1342765
+last: 1464837, second last: 1342778
+last: 1342765, second last: 1342778
+last: 1342765, second last: 1464850
+last: 1342765, second last: 1342778
+last: 1342765, second last: 1342778
+last: 1464837, second last: 1342778
+last: 1342765, second last: 1342778
+last: 1342765, second last: 1464850
+last: 1342779, second last: 1342778
+last: 1342779, second last: 1342778

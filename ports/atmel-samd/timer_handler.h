@@ -11,6 +11,7 @@
 #define TC_HANDLER_FREQUENCYIN 0x3
 #define TC_HANDLER_RGBMATRIX 0x4
 #define TC_HANDLER_PULSEIN 0x5
+#define TC_HANDLER_ORGANOUT 0x6
 
 void set_timer_handler(bool is_tc, uint8_t index, uint8_t timer_handler);
 void shared_timer_handler(bool is_tc, uint8_t index);

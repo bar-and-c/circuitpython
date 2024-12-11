@@ -11,6 +11,7 @@
 
 #include "common-hal/pulseio/PulseIn.h"
 #include "common-hal/pulseio/PulseOut.h"
+#include "common-hal/organio/OrganOut.h"
 #include "common-hal/_pew/PewPew.h"
 #include "common-hal/frequencyio/FrequencyIn.h"
 
@@ -38,6 +39,11 @@ void shared_timer_handler(bool is_tc, uint8_t index) {
             case TC_HANDLER_PULSEOUT:
                 #if CIRCUITPY_PULSEIO
                 pulseout_interrupt_handler(index);
+                #endif
+                break;
+            case TC_HANDLER_ORGANOUT:
+                #if CIRCUITPY_ORGANIO
+                organout_interrupt_handler(index);
                 #endif
                 break;
             case TC_HANDLER_PEW:
