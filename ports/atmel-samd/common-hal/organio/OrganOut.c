@@ -204,13 +204,9 @@ Also, wait for sync in all cases, after timer settings, where needed.
 
 */
 
-        if (duty_cycle < 4) {
-            printf("Using 48 MHz clock for timer\n");
-            turn_on_clocks(true, index, 1);
-        } else {
-            printf("Using 120 MHz clock for timer\n");
-            turn_on_clocks(true, index, 0);
-        }
+        // Always use 120 MHz on SAMD51 (TODO: Make SAMD21 work later, if needed)
+        printf("Using 120 MHz clock for timer\n");
+        turn_on_clocks(true, index, 0);
 
         #endif
 
@@ -230,15 +226,10 @@ Also, wait for sync in all cases, after timer settings, where needed.
         tc->COUNT16.CTRLA.reg = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV1;
         tc_wait_for_sync(tc);
 
-        if ((duty_cycle < 2) || (duty_cycle == 4) || (duty_cycle == 5)) {
-            printf("Using WAVE NFRQ for timer\n");
-            tc->COUNT16.WAVE.reg = TC_WAVE_WAVEGEN_NFRQ;
-            tc_wait_for_sync(tc);
-        } else {
-            printf("Using WAVE MFRQ for timer\n");
-            tc->COUNT16.WAVE.reg = TC_WAVE_WAVEGEN_MFRQ;
-            tc_wait_for_sync(tc);
-        }
+        // Always use MFRQ, because we want to have variable times (couldn't make that work with NFRQ, so sue me)
+        printf("Using WAVE MFRQ for timer\n");
+        tc->COUNT16.WAVE.reg = TC_WAVE_WAVEGEN_MFRQ;
+        tc_wait_for_sync(tc);
         #endif
 
         tc_set_enable(tc, true); // This call does wait for sync in the function
