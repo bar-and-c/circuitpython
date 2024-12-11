@@ -32,6 +32,22 @@ CircuitPython is based on `MicroPython <https://micropython.org>`_. See
 development is sponsored by `Adafruit <https://adafruit.com>`_ and is available on their educational
 development boards. Please support both MicroPython and Adafruit.
 
+
+About this fork
+------------------
+
+The goal is to generate 56 square wave tones for a home organ, as a replacement for the missing
+top octave divider thing. The reason for not simply doing a top octave divider thing is to try to
+get more sonic variation, the main and obvious idea being pulse width modulation.
+
+The module pwmio produced nice results, but each tone hogged a lot of pins, for some reason
+(something to do with how timers work on the SAMD51). So this is a hack attempt to see if it could
+be made in a simpler way for this specific application.
+
+The answer is no, at least not by this developer in a first attempt to do something in CircuitPython
+(or on SAMD51).
+
+
 Get CircuitPython
 ------------------
 
