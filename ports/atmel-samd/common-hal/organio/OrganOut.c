@@ -117,11 +117,8 @@ void common_hal_organio_organout_construct(organio_organout_obj_t *self,
     Now it's 1342 us, and with my guesses that's with a CC of 0xFFFF (65535), so to get 100, try with
     4883 and 48 MHz.
     */
-    if ((duty_cycle & 0x00000001) == 0) {
-        compare_count = 1 * 4883; // How fast can you go, little man?
-    } else {
-        compare_count = 2 * 4883;
-    }
+    // TODO: As experiment, use passed in value for CC
+    compare_count = duty_cycle;
     printf("Using CC value %lu for timer\n", compare_count);
 
 
