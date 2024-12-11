@@ -13,8 +13,6 @@
 
 typedef struct {
     mp_obj_base_t base;
-    digitalio_digitalinout_obj_t digi_out;
-    uint8_t pin;
 } organio_organout_obj_t;
 
 void organout_reset(void);

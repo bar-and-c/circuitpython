@@ -120,22 +120,47 @@ static mp_obj_t organio_organout_make_new(const mp_obj_type_t *type, size_t n_ar
 
     // TODO: Either let the constructor take an array of this (pin/freq/PW) or have an "add()" method
     #if CIRCUITPY_ORGANIO
-    enum { ARG_pin, ARG_frequency, ARG_duty_cycle};
+    enum {ARG_pins, ARG_frequencies};
     static const mp_arg_t allowed_args[] = {
-        { MP_QSTR_pin, MP_ARG_REQUIRED | MP_ARG_OBJ },
-        { MP_QSTR_frequency, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = 38000} },
-        { MP_QSTR_duty_cycle, MP_ARG_KW_ONLY | MP_ARG_INT, {.u_int = 1 << 15} },
+        { MP_QSTR_pins, MP_ARG_REQUIRED | MP_ARG_OBJ },
+        { MP_QSTR_frequencies, MP_ARG_REQUIRED | MP_ARG_OBJ },
     };
     mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
     mp_arg_parse_all_kw_array(n_args, n_kw, all_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
 
-    const mcu_pin_obj_t *pin = validate_obj_is_free_pin(args[ARG_pin].u_obj, MP_QSTR_pin);
-    mp_int_t frequency = args[ARG_frequency].u_int;
-    mp_int_t duty_cycle = args[ARG_duty_cycle].u_int;
+    mp_obj_t pins = args[ARG_pins].u_obj;
+    // mp_obj_len() will be >= 0.
+    const size_t num_pins = (size_t)MP_OBJ_SMALL_INT_VALUE(mp_obj_len(pins));
+    const mcu_pin_obj_t *pins_array[num_pins];
+
+    validate_no_duplicate_pins(pins, MP_QSTR_pins);
+
+    for (size_t i = 0; i < num_pins; i++) {
+        const mcu_pin_obj_t *pin =
+            validate_obj_is_free_pin(mp_obj_subscr(pins, MP_OBJ_NEW_SMALL_INT(i), MP_OBJ_SENTINEL), MP_QSTR_pin);
+        pins_array[i] = pin;
+    }
+
+
+    mp_obj_t frequencies = args[ARG_frequencies].u_obj;
+    const size_t num_frequencies = (size_t)MP_OBJ_SMALL_INT_VALUE(mp_obj_len(frequencies));
+    mp_float_t frequencies_array[num_frequencies];
+
+    if (num_frequencies != num_pins) {
+        mp_raise_ValueError(MP_ERROR_TEXT("The number of pins must be the same as the number of frequencies"));
+    }
+
+    for (size_t i = 0; i < num_frequencies; i++) {
+        const mp_obj_t f = mp_obj_subscr(frequencies, MP_OBJ_NEW_SMALL_INT(i), MP_OBJ_SENTINEL);
+//        mp_float_t frequency = mp_arg_validate_obj_float_range(mp_obj_float_get(f), 20, 3000, MP_QSTR_freq);
+        mp_float_t frequency = mp_arg_validate_obj_float_range(f, 20, 3000, MP_QSTR_freq);
+
+        frequencies_array[i] = frequency;
+    }
 
     organio_organout_obj_t *self = m_new_obj_with_finaliser(organio_organout_obj_t);
     self->base.type = &organio_organout_type;
-    common_hal_organio_organout_construct(self, pin, frequency, duty_cycle);
+    common_hal_organio_organout_construct(self, pins_array, frequencies_array, num_pins);
     return MP_OBJ_FROM_PTR(self);
     #else
     mp_raise_NotImplementedError(NULL);

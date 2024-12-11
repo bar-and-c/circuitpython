@@ -13,9 +13,9 @@
 extern const mp_obj_type_t organio_organout_type;
 
 extern void common_hal_organio_organout_construct(organio_organout_obj_t *self,
-    const mcu_pin_obj_t *pin,
-    uint32_t frequency,
-    uint16_t duty_cycle);
+    const mcu_pin_obj_t *pins[],
+    const mp_float_t frequencies[],
+    const size_t num_tones);
 
 extern void common_hal_organio_organout_deinit(organio_organout_obj_t *self);
 extern bool common_hal_organio_organout_deinited(organio_organout_obj_t *self);
