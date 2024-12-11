@@ -337,6 +337,9 @@ void common_hal_organio_organout_deinit(organio_organout_obj_t *self) {
         tc_reset(tc_insts[pulseout_tc_index]);
         pulseout_tc_index = 0xff;
     }
+
+    tones_running = false;
+
     #ifdef SAMD21
     samd_allow_sleep();
     #endif
