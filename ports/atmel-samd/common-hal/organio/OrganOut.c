@@ -39,13 +39,6 @@ static volatile uint32_t compare_count = 0;
 static uint64_t last_toggle = 0;
 static uint64_t period_ns;
 
-
-static uint64_t last_ns = 0xffffffffffffffff;
-
-#define MAX_NUM_DIFFS 10
-static uint32_t ns_diffs[MAX_NUM_DIFFS];
-static uint32_t diff_ix = 0;
-
 static void pulse_finish(void) {
     if (!tones_running) {
         return;
@@ -54,12 +47,6 @@ static void pulse_finish(void) {
     bool do_toggle = false;
 
     uint64_t current_ns = common_hal_time_monotonic_ns();
-
-    if ((last_ns != 0xffffffffffffffff) && (diff_ix < MAX_NUM_DIFFS)) {
-        ns_diffs[diff_ix] = (uint32_t)(current_ns - last_ns);
-        diff_ix += 1;
-    }
-    last_ns = current_ns;
 
     if ((current_ns - last_toggle) > (period_ns / 2)) {
         do_toggle = true;
@@ -92,9 +79,6 @@ void common_hal_organio_organout_construct(organio_organout_obj_t *self,
     const mcu_pin_obj_t *pin,
     uint32_t frequency,
     uint16_t duty_cycle) {
-
-    diff_ix = 0;
-    last_ns = 0xffffffffffffffff;
 
     digitalinout_result_t result = common_hal_digitalio_digitalinout_construct(&self->digi_out, pin);
     if (result != DIGITALINOUT_OK) {
@@ -294,12 +278,6 @@ void common_hal_organio_organout_start(organio_organout_obj_t *self) {
 void common_hal_organio_organout_stop(organio_organout_obj_t *self) {
     if (!tones_running) {
         mp_raise_RuntimeError(MP_ERROR_TEXT("This organio object is not running"));
-    }
-
-
-    printf("Time diffs: \n");
-    for (int i = 0; i < MAX_NUM_DIFFS; i++) {
-        printf("%lu\n", ns_diffs[i]);
     }
 
     Tc *tc = tc_insts[pulseout_tc_index];
